@@ -9,5 +9,5 @@ export const PRIORITY_LABELS: Record<Priority, string> = {
 export const PRIORITY_COLORS: Record<Priority, string> = {
   low: '#6b7280',
   medium: '#d97706',
-  high: '#6b7280',
+  high: '#dc2626',
 };
