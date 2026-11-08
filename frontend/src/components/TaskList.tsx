@@ -1,4 +1,5 @@
 import type { Task } from '../types';
+import { PriorityBadge } from './PriorityBadge';
 
 interface Props {
   tasks: Task[];
@@ -7,19 +8,22 @@ interface Props {
 }
 
 export function TaskList({ tasks, onToggle, onDelete }: Props) {
-  if (tasks.length === 0) return <p>No tasks</p>;
+  if (tasks.length === 0) return <p className="empty">No tasks</p>;
 
   return (
-    <ul>
+    <ul className="task-list">
       {tasks.map((task) => (
-        <li key={task.id} data-priority={task.priority}>
+        <li key={task.id} data-priority={task.priority} className={task.done ? 'done' : undefined}>
           <label>
             <input type="checkbox" checked={task.done} onChange={() => onToggle(task)} />
-            <span style={{ textDecoration: task.done ? 'line-through' : undefined }}>
-              {task.title}
-            </span>
+            <span className="title">{task.title}</span>
           </label>
-          <button aria-label={`Delete ${task.title}`} onClick={() => onDelete(task)}>
+          <PriorityBadge priority={task.priority} />
+          <button
+            className="delete"
+            aria-label={`Delete ${task.title}`}
+            onClick={() => onDelete(task)}
+          >
             ×
           </button>
         </li>
