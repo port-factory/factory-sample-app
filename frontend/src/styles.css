@@ -1,0 +1,133 @@
+:root {
+  --bg: #f5f6f8;
+  --card: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --accent: #4f46e5;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+main {
+  max-width: 720px;
+  margin: 48px auto;
+  padding: 32px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 6%);
+}
+
+h1 {
+  margin: 0 0 24px;
+  font-size: 28px;
+}
+
+form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+input[aria-label='Title'] {
+  flex: 1;
+}
+
+input,
+select,
+button {
+  font: inherit;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+}
+
+button[type='submit'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  cursor: pointer;
+}
+
+button[type='submit']:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+[aria-label='summary'] {
+  color: var(--muted);
+}
+
+[aria-label='filter'] {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+[aria-label='filter'] button {
+  cursor: pointer;
+  text-transform: capitalize;
+}
+
+[aria-label='filter'] button[aria-pressed='true'] {
+  background: var(--text);
+  border-color: var(--text);
+  color: white;
+}
+
+.task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.task-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.task-list label {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-list li.done .title {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.badge {
+  padding: 2px 10px;
+  border-radius: 999px;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.delete {
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.empty {
+  color: var(--muted);
+}
