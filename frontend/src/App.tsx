@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from './api';
+import { ProgressBar } from './components/ProgressBar';
 import { TaskForm } from './components/TaskForm';
 import { TaskList } from './components/TaskList';
 import { filterTasks, type Filter } from './lib/filterTasks';
@@ -31,6 +32,7 @@ export function App() {
   return (
     <main>
       <h1>Tasks</h1>
+      {data && <ProgressBar done={data.summary.done} total={data.summary.total} />}
       {error && <p role="alert">{error}</p>}
       <TaskForm onSubmit={create} />
       {!data ? (

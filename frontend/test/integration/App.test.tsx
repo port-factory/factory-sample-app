@@ -57,6 +57,21 @@ describe('App', () => {
     expect(await screen.findByText('No tasks')).toBeInTheDocument();
   });
 
+  it('updates the progress bar after toggling a task', async () => {
+    render(<App />);
+    await screen.findByText('No tasks');
+    expect(screen.getByText('0 of 0 done')).toBeInTheDocument();
+
+    await addTask('Write integration tests');
+    await addTask('Set up CI');
+    expect(screen.getByText('0 of 2 done')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('checkbox', { name: 'Set up CI' }));
+    expect(await screen.findByText('1 of 2 done')).toBeInTheDocument();
+    expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '1');
+    expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuemax', '2');
+  });
+
   it('surfaces API errors', async () => {
     backend.server.use(
       http.post('*/api/tasks', () =>
