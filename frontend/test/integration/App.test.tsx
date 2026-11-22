@@ -54,7 +54,11 @@ describe('App', () => {
     expect(screen.getByText('Set up CI')).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: 'Delete Set up CI' }));
-    expect(await screen.findByText('No tasks')).toBeInTheDocument();
+    expect(await screen.findByText('No tasks match the "done" filter')).toBeInTheDocument();
+    expect(screen.queryByText('No tasks')).not.toBeInTheDocument();
+
+    await userEvent.click(filters.getByRole('button', { name: 'all' }));
+    expect(screen.getByText('Write integration tests')).toBeInTheDocument();
   });
 
   it('surfaces API errors', async () => {
