@@ -27,6 +27,11 @@ export function App() {
   const create = (title: string, priority: Priority) => run(() => api.createTask(title, priority));
   const toggle = (task: Task) => run(() => api.setDone(task.id, !task.done));
   const remove = (task: Task) => run(() => api.deleteTask(task.id));
+  const clearCompleted = () =>
+    run(async () => {
+      const done = data?.tasks.filter((t) => t.done) ?? [];
+      await Promise.all(done.map((t) => api.deleteTask(t.id)));
+    });
 
   return (
     <main>
@@ -47,6 +52,9 @@ export function App() {
               </button>
             ))}
           </div>
+          <button onClick={clearCompleted} disabled={data.summary.done === 0}>
+            Clear completed
+          </button>
           <TaskList tasks={filterTasks(data.tasks, filter)} onToggle={toggle} onDelete={remove} />
         </>
       )}

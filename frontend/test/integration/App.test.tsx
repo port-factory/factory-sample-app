@@ -57,6 +57,61 @@ describe('App', () => {
     expect(await screen.findByText('No tasks')).toBeInTheDocument();
   });
 
+  it('disables "Clear completed" when no tasks are done', async () => {
+    render(<App />);
+    await screen.findByText('No tasks');
+    expect(screen.getByRole('button', { name: 'Clear completed' })).toBeDisabled();
+
+    await addTask('Open task');
+    expect(screen.getByRole('button', { name: 'Clear completed' })).toBeDisabled();
+
+    await userEvent.click(screen.getByRole('checkbox', { name: 'Open task' }));
+    await screen.findByText('0 open / 1 done');
+    expect(screen.getByRole('button', { name: 'Clear completed' })).toBeEnabled();
+  });
+
+  it('clears all done tasks and keeps open ones, regardless of filter', async () => {
+    render(<App />);
+    await screen.findByText('No tasks');
+    await addTask('One');
+    await addTask('Two');
+    await addTask('Three');
+
+    await userEvent.click(screen.getByRole('checkbox', { name: 'One' }));
+    await screen.findByText('2 open / 1 done');
+    await userEvent.click(screen.getByRole('checkbox', { name: 'Two' }));
+    await screen.findByText('1 open / 2 done');
+
+    const filters = within(screen.getByRole('group', { name: 'filter' }));
+    await userEvent.click(filters.getByRole('button', { name: 'open' }));
+
+    await userEvent.click(screen.getByRole('button', { name: 'Clear completed' }));
+    expect(await screen.findByText('1 open / 0 done')).toBeInTheDocument();
+    expect(screen.getByText('Three')).toBeInTheDocument();
+
+    await userEvent.click(filters.getByRole('button', { name: 'all' }));
+    expect(screen.queryByText('One')).not.toBeInTheDocument();
+    expect(screen.queryByText('Two')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Clear completed' })).toBeDisabled();
+  });
+
+  it('shows an alert when clearing completed tasks fails', async () => {
+    render(<App />);
+    await screen.findByText('No tasks');
+    await addTask('One');
+    await userEvent.click(screen.getByRole('checkbox', { name: 'One' }));
+    await screen.findByText('0 open / 1 done');
+
+    backend.server.use(
+      http.delete('*/api/tasks/:id', () =>
+        HttpResponse.json({ errors: ['cannot delete'] }, { status: 500 }),
+      ),
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Clear completed' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('cannot delete');
+  });
+
   it('surfaces API errors', async () => {
     backend.server.use(
       http.post('*/api/tasks', () =>
