@@ -62,7 +62,8 @@ button[type='submit'] {
 }
 
 button[type='submit']:disabled {
-  cursor: default;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 [aria-label='summary'] {
