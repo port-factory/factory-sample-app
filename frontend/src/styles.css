@@ -69,18 +69,27 @@ button[type='submit']:disabled {
   color: var(--muted);
 }
 
-[aria-label='filter'] {
+.controls {
   display: flex;
-  gap: 6px;
+  flex-wrap: wrap;
+  gap: 12px 24px;
   margin-bottom: 12px;
 }
 
-[aria-label='filter'] button {
+[aria-label='filter'],
+[aria-label='sort'] {
+  display: flex;
+  gap: 6px;
+}
+
+[aria-label='filter'] button,
+[aria-label='sort'] button {
   cursor: pointer;
   text-transform: capitalize;
 }
 
-[aria-label='filter'] button[aria-pressed='false'] {
+[aria-label='filter'] button[aria-pressed='false'],
+[aria-label='sort'] button[aria-pressed='false'] {
   background: var(--text);
   border-color: var(--text);
   color: white;

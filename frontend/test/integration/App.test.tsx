@@ -57,6 +57,52 @@ describe('App', () => {
     expect(await screen.findByText('No tasks')).toBeInTheDocument();
   });
 
+  it('sorts by priority, combines with the filter and keeps the sort', async () => {
+    render(<App />);
+    await screen.findByText('No tasks');
+
+    const addWithPriority = async (title: string, priority: string) => {
+      await userEvent.selectOptions(screen.getByLabelText('Priority'), priority);
+      await addTask(title);
+    };
+    await addWithPriority('Low one', 'low');
+    await addWithPriority('High one', 'high');
+    await addWithPriority('Medium one', 'medium');
+    await addWithPriority('High two', 'high');
+
+    const titles = () =>
+      within(screen.getByRole('list'))
+        .getAllByRole('listitem')
+        .map((li) => li.querySelector('.title')?.textContent);
+    const sortGroup = within(screen.getByRole('group', { name: 'sort' }));
+    expect(sortGroup.getByRole('button', { name: 'default' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    const defaultOrder = ['Low one', 'High one', 'Medium one', 'High two'];
+    expect(titles()).toEqual(defaultOrder);
+
+    await userEvent.click(sortGroup.getByRole('button', { name: 'priority' }));
+    expect(sortGroup.getByRole('button', { name: 'priority' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    const byPriority = ['High one', 'High two', 'Medium one', 'Low one'];
+    expect(titles()).toEqual(byPriority);
+
+    // sort persists after add and toggle, and combines with the filter
+    await addWithPriority('Medium two', 'medium');
+    expect(titles()).toEqual(['High one', 'High two', 'Medium one', 'Medium two', 'Low one']);
+    await userEvent.click(screen.getByRole('checkbox', { name: 'High one' }));
+    await screen.findByText('4 open / 1 done');
+    const filters = within(screen.getByRole('group', { name: 'filter' }));
+    await userEvent.click(filters.getByRole('button', { name: 'open' }));
+    expect(titles()).toEqual(['High two', 'Medium one', 'Medium two', 'Low one']);
+
+    await userEvent.click(sortGroup.getByRole('button', { name: 'default' }));
+    expect(titles()).toEqual(['Low one', 'Medium one', 'High two', 'Medium two']);
+  });
+
   it('surfaces API errors', async () => {
     backend.server.use(
       http.post('*/api/tasks', () =>
