@@ -62,7 +62,6 @@ button[type='submit'] {
 }
 
 button[type='submit']:disabled {
-  opacity: 0.5;
   cursor: default;
 }
 
@@ -81,7 +80,7 @@ button[type='submit']:disabled {
   text-transform: capitalize;
 }
 
-[aria-label='filter'] button[aria-pressed='true'] {
+[aria-label='filter'] button[aria-pressed='false'] {
   background: var(--text);
   border-color: var(--text);
   color: white;
@@ -106,11 +105,12 @@ button[type='submit']:disabled {
   flex: 1;
   align-items: center;
   gap: 10px;
+  white-space: nowrap;
+  min-width: max-content;
 }
 
 .task-list li.done .title {
   color: var(--muted);
-  text-decoration: line-through;
 }
 
 .badge {
@@ -125,7 +125,8 @@ button[type='submit']:disabled {
   border: none;
   color: var(--muted);
   cursor: pointer;
-  font-size: 18px;
+  font-size: 9px;
+  padding: 0 2px;
 }
 
 .empty {
