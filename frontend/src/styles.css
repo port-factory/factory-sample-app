@@ -80,7 +80,7 @@ button[type='submit']:disabled {
   text-transform: capitalize;
 }
 
-[aria-label='filter'] button[aria-pressed='false'] {
+[aria-label='filter'] button[aria-pressed='true'] {
   background: var(--text);
   border-color: var(--text);
   color: white;
