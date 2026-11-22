@@ -111,6 +111,7 @@ button[type='submit']:disabled {
 
 .task-list li.done .title {
   color: var(--muted);
+  text-decoration: line-through;
 }
 
 .badge {
