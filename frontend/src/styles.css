@@ -105,8 +105,8 @@ button[type='submit']:disabled {
   flex: 1;
   align-items: center;
   gap: 10px;
-  white-space: nowrap;
-  min-width: max-content;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .task-list li.done .title {
