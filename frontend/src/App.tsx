@@ -28,6 +28,8 @@ export function App() {
   const toggle = (task: Task) => run(() => api.setDone(task.id, !task.done));
   const remove = (task: Task) => run(() => api.deleteTask(task.id));
 
+  const visibleTasks = data ? filterTasks(data.tasks, filter) : [];
+
   return (
     <main>
       <h1>Tasks</h1>
@@ -47,7 +49,14 @@ export function App() {
               </button>
             ))}
           </div>
-          <TaskList tasks={filterTasks(data.tasks, filter)} onToggle={toggle} onDelete={remove} />
+          <TaskList
+            tasks={visibleTasks}
+            onToggle={toggle}
+            onDelete={remove}
+            emptyMessage={
+              data.tasks.length > 0 ? `No tasks match the "${filter}" filter` : undefined
+            }
+          />
         </>
       )}
     </main>

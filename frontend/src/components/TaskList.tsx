@@ -5,10 +5,11 @@ interface Props {
   tasks: Task[];
   onToggle: (task: Task) => void;
   onDelete: (task: Task) => void;
+  emptyMessage?: string;
 }
 
-export function TaskList({ tasks, onToggle, onDelete }: Props) {
-  if (tasks.length === 0) return <p className="empty">No tasks</p>;
+export function TaskList({ tasks, onToggle, onDelete, emptyMessage = 'No tasks' }: Props) {
+  if (tasks.length === 0) return <p className="empty">{emptyMessage}</p>;
 
   return (
     <ul className="task-list">

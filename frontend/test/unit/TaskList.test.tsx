@@ -9,6 +9,14 @@ describe('TaskList', () => {
     expect(screen.getByText('No tasks')).toBeInTheDocument();
   });
 
+  it('shows a custom empty message', () => {
+    render(
+      <TaskList tasks={[]} emptyMessage="Nothing here" onToggle={vi.fn()} onDelete={vi.fn()} />,
+    );
+    expect(screen.getByText('Nothing here')).toBeInTheDocument();
+    expect(screen.queryByText('No tasks')).not.toBeInTheDocument();
+  });
+
   it('renders tasks and forwards toggle/delete', async () => {
     const task = makeTask({ title: 'Review PR', done: true });
     const onToggle = vi.fn();
