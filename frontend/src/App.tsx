@@ -5,6 +5,16 @@ import { TaskList } from './components/TaskList';
 import { filterTasks, type Filter } from './lib/filterTasks';
 import type { Priority, Task, TaskListResponse } from './types';
 
+const FILTERS: {
+  value: Filter;
+  label: string;
+  count: (s: TaskListResponse['summary']) => number;
+}[] = [
+  { value: 'all', label: 'All', count: (s) => s.total },
+  { value: 'open', label: 'Open', count: (s) => s.open },
+  { value: 'done', label: 'Done', count: (s) => s.done },
+];
+
 export function App() {
   const [data, setData] = useState<TaskListResponse>();
   const [error, setError] = useState<string>();
@@ -41,9 +51,9 @@ export function App() {
             {data.summary.open} open / {data.summary.done} done
           </p>
           <div role="group" aria-label="filter">
-            {(['all', 'open', 'done'] as const).map((f) => (
-              <button key={f} aria-pressed={filter === f} onClick={() => setFilter(f)}>
-                {f}
+            {FILTERS.map(({ value, label, count }) => (
+              <button key={value} aria-pressed={filter === value} onClick={() => setFilter(value)}>
+                {label} ({count(data.summary)})
               </button>
             ))}
           </div>

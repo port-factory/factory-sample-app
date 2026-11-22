@@ -35,6 +35,10 @@ describe('App', () => {
     render(<App />);
     expect(await screen.findByText('No tasks')).toBeInTheDocument();
     expect(screen.getByLabelText('summary')).toHaveTextContent('0 open / 0 done');
+    const filters = within(screen.getByRole('group', { name: 'filter' }));
+    expect(filters.getByRole('button', { name: 'All (0)' })).toBeInTheDocument();
+    expect(filters.getByRole('button', { name: 'Open (0)' })).toBeInTheDocument();
+    expect(filters.getByRole('button', { name: 'Done (0)' })).toBeInTheDocument();
   });
 
   it('creates, completes, filters and deletes tasks', async () => {
@@ -49,12 +53,26 @@ describe('App', () => {
     expect(await screen.findByText('1 open / 1 done')).toBeInTheDocument();
 
     const filters = within(screen.getByRole('group', { name: 'filter' }));
-    await userEvent.click(filters.getByRole('button', { name: 'done' }));
+    expect(filters.getByRole('button', { name: 'All (2)' })).toBeInTheDocument();
+    expect(filters.getByRole('button', { name: 'Open (1)' })).toBeInTheDocument();
+    expect(filters.getByRole('button', { name: 'Done (1)' })).toBeInTheDocument();
+
+    await userEvent.click(filters.getByRole('button', { name: 'Done (1)' }));
+    expect(filters.getByRole('button', { name: 'Done (1)' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
     expect(screen.queryByText('Write integration tests')).not.toBeInTheDocument();
     expect(screen.getByText('Set up CI')).toBeInTheDocument();
+    // counts do not change with the selected filter
+    expect(filters.getByRole('button', { name: 'All (2)' })).toBeInTheDocument();
+    expect(filters.getByRole('button', { name: 'Open (1)' })).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: 'Delete Set up CI' }));
     expect(await screen.findByText('No tasks')).toBeInTheDocument();
+    expect(filters.getByRole('button', { name: 'All (1)' })).toBeInTheDocument();
+    expect(filters.getByRole('button', { name: 'Open (1)' })).toBeInTheDocument();
+    expect(filters.getByRole('button', { name: 'Done (0)' })).toBeInTheDocument();
   });
 
   it('surfaces API errors', async () => {
