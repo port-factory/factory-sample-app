@@ -18,7 +18,7 @@ export function ProgressBar({ done, total }: Props) {
         <div className="progress-fill" style={{ width: `${percent}%` }} />
       </div>
       <span className="progress-label">
-        {done} of {total} done
+        {done} of {total} done ({Math.round(percent)}%)
       </span>
     </div>
   );
